@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xzd.springbucks.mapper.CoffeeMapper">
+  <resultMap id="BaseResultMap" type="xzd.springbucks.model.Coffee">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="PRICE" jdbcType="BIGINT" property="price" typeHandler="xzd.springbucks.handler.MoneyTypeHandler" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <select id="findCoffeeById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select ID, NAME, PRICE, CREATE_TIME, UPDATE_TIME
+    from T_COFFEE
+    where and ID = #{id,jdbcType=BIGINT}
+
+
+  </select>
+
+  <select id="findAll"  resultMap="BaseResultMap">
+    select
+    ID, NAME, PRICE, CREATE_TIME, UPDATE_TIME
+    from T_COFFEE
+  </select>
+
+  <delete id="deleteCoffeeById" parameterType="java.lang.Long">
+    delete from T_COFFEE
+    <where>
+        ID = #{id,jdbcType=BIGINT}
+    </where>
+  </delete>
+  <insert id="insertCoffee" parameterType="xzd.springbucks.model.Coffee">
+    insert into T_COFFEE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      ID,
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="price != null">
+        PRICE,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=BIGINT,typeHandler=geektime.spring.springbucks.handler.MoneyTypeHandler},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateCoffeeById" parameterType="xzd.springbucks.model.Coffee">
+    update T_COFFEE
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        PRICE = #{price,jdbcType=BIGINT,typeHandler=geektime.spring.springbucks.handler.MoneyTypeHandler},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <where>
+      ID = #{id,jdbcType=BIGINT}
+    </where>
+  </update>
+</mapper>
